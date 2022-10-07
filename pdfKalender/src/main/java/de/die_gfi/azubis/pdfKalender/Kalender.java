@@ -43,6 +43,9 @@ public class Kalender {
 
 	public static Image[] bilder = new Image[12];
 	public static String[] bildquellen = new String[12];
+	public static String[] bildnamen = { "schneeberge.jpg", "schneegloeckchen.jpg", "osterglocken.jpg",
+			"regenbogen.jpg", "kirschbluete.jpg", "sommerberg.jpg", "kornfeld.jpg", "suedsee.jpg", "wald.jpg",
+			"herbstwald.jpg", "regenschirm.jpg", "schneewald.jpg" };
 
 	public static void main(String[] args) throws IOException {
 
@@ -53,18 +56,11 @@ public class Kalender {
 	}
 
 	private static void bilderErzeugen() throws MalformedURLException {
-		bilder[0] = new Image(ImageDataFactory.create(PATH + "schneeberge.jpg"));
-		bilder[1] = new Image(ImageDataFactory.create(PATH + "schneegloeckchen.jpg"));
-		bilder[2] = new Image(ImageDataFactory.create(PATH + "osterglocken.jpg"));
-		bilder[3] = new Image(ImageDataFactory.create(PATH + "regenbogen.jpg"));
-		bilder[4] = new Image(ImageDataFactory.create(PATH + "kirschbluete.jpg"));
-		bilder[5] = new Image(ImageDataFactory.create(PATH + "sommerberg.jpg"));
-		bilder[6] = new Image(ImageDataFactory.create(PATH + "kornfeld.jpg"));
-		bilder[7] = new Image(ImageDataFactory.create(PATH + "suedsee.jpg"));
-		bilder[8] = new Image(ImageDataFactory.create(PATH + "wald.jpg"));
-		bilder[9] = new Image(ImageDataFactory.create(PATH + "herbstwald.jpg"));
-		bilder[10] = new Image(ImageDataFactory.create(PATH + "regenschirm.jpg"));
-		bilder[11] = new Image(ImageDataFactory.create(PATH + "schneewald.jpg"));
+
+		for (int i = 0; i < 12; i++) {
+			bilder[i] = new Image(ImageDataFactory.create(PATH + bildnamen[i]));
+		}
+
 	}
 
 	private static void bildquellenEinlesen() throws IOException {
