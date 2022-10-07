@@ -1,6 +1,8 @@
 package de.die_gfi.azubis.pdfKalender;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDate;
@@ -34,16 +36,20 @@ public class Kalender {
 	public final static String[] WOCHENTAGE_DE = { "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag",
 			"Sonntag" };
 
+	public final static int ZELLENHOEHE = 50;
+
 	public static PdfFont ueberschrift;
 	public static PdfFont standard;
 
 	public static Image[] bilder = new Image[12];
+	public static String[] bildquellen = new String[12];
 
 	public static void main(String[] args) throws IOException {
 
 		bilderErzeugen();
+		bildquellenEinlesen();
 
-		kalenderErstellen();
+		jahreskalenderErstellen(2022);
 	}
 
 	private static void bilderErzeugen() throws MalformedURLException {
@@ -61,11 +67,19 @@ public class Kalender {
 		bilder[11] = new Image(ImageDataFactory.create(PATH + "schneewald.jpg"));
 	}
 
-	private static void kalenderErstellen() throws IOException {
+	private static void bildquellenEinlesen() throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(PATH + "bildquellen.txt"));
+
+		for (int i = 0; i < 12; i++) {
+			bildquellen[i] = reader.readLine();
+		}
+
+		reader.close();
+	}
+
+	private static void jahreskalenderErstellen(int jahr) throws IOException {
 		ueberschrift = PdfFontFactory.createFont(StandardFonts.COURIER_BOLD);
 		standard = PdfFontFactory.createFont(StandardFonts.COURIER);
-
-		int jahr = 2022;
 
 		Document document = pdfSetup();
 
@@ -81,7 +95,9 @@ public class Kalender {
 
 	private static void monatErstellen(Document document, int monat, int jahr) {
 
-		document.add(bilder[monat - 1].setMarginBottom(1));
+		document.add(bilder[monat - 1]);
+		document.add(new Paragraph(bildquellen[monat - 1]).setFont(standard).setFontSize(4)
+				.setTextAlignment(TextAlignment.RIGHT));
 
 		Table rahmen = new Table(1).useAllAvailableWidth();
 		Cell zelle = new Cell().setPadding(0).setBorder(new SolidBorder(ColorConstants.BLACK, 2));
@@ -135,7 +151,7 @@ public class Kalender {
 		int anzLeerzellen = ersterTag.getDayOfWeek().getValue() - 1;
 
 		for (int i = 0; i < anzLeerzellen; i++) {
-			Cell zelle = new Cell().setHeight(40);
+			Cell zelle = new Cell().setHeight(ZELLENHOEHE);
 
 			if (i != 0) {
 				zelle.setBorderLeft(new SolidBorder(ColorConstants.LIGHT_GRAY, 0.5f));
@@ -149,7 +165,7 @@ public class Kalender {
 		}
 
 		for (int i = 0; i < anzTage; i++) {
-			tabelle.addCell(new Cell().setHeight(40).add(new Paragraph("" + (i + 1)).setFont(standard)));
+			tabelle.addCell(new Cell().setHeight(ZELLENHOEHE).add(new Paragraph("" + (i + 1)).setFont(standard)));
 		}
 
 	}
